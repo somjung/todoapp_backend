@@ -53,18 +53,31 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable()) // JWT stateless authentication
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     new AntPathRequestMatcher("/api/auth/**"),
-                    new AntPathRequestMatcher("/h2-console/**")
+                    new AntPathRequestMatcher("/actuator/health"),
+                    new AntPathRequestMatcher("/error")
                 ).permitAll()
                 .anyRequest().authenticated()
             )
-            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())); // For H2 console
+            // Security Headers following Google recommendations
+            .headers(headers -> headers
+                .frameOptions(frameOptions -> frameOptions.deny()) // Prevent clickjacking
+                .contentTypeOptions(contentType -> contentType.and()) // Prevent MIME sniffing
+                .httpStrictTransportSecurity(hstsConfig -> hstsConfig
+                    .maxAgeInSeconds(31536000) // 1 year
+                    .includeSubDomains(true)
+                )
+                .referrerPolicy(referrer -> referrer.policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                .permissionsPolicy(permissions -> permissions.policy(
+                    "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+                ))
+            );
 
         return http.build();
     }
@@ -72,13 +85,41 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        
+        // Strict origin control - only allow specific origins
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:3000",  // Development frontend
+            "http://127.0.0.1:3000",  // Alternative localhost
+            "https://your-production-domain.com" // Replace with your production domain
+        ));
+        
+        // Restrict HTTP methods to only what's needed
+        configuration.setAllowedMethods(Arrays.asList(
+            "GET", "POST", "PUT", "DELETE", "OPTIONS"
+        ));
+        
+        // Restrict headers to only what's necessary
+        configuration.setAllowedHeaders(Arrays.asList(
+            "Authorization",
+            "Content-Type",
+            "X-Requested-With",
+            "Accept",
+            "Origin"
+        ));
+        
+        // Expose only necessary headers
+        configuration.setExposedHeaders(Arrays.asList(
+            "Authorization"
+        ));
+        
+        // Enable credentials for secure cookie handling
         configuration.setAllowCredentials(true);
         
+        // Cache preflight requests for 1 hour
+        configuration.setMaxAge(3600L);
+        
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
 }

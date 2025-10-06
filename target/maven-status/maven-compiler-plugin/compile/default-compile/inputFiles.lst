@@ -1,9 +1,12 @@
+C:\Users\User\Documents\GitHub\todoapp2\backend\src\main\java\com\todoapp\config\RateLimitingConfig.java
 C:\Users\User\Documents\GitHub\todoapp2\backend\src\main\java\com\todoapp\service\strategy\TodoStrategyFactory.java
 C:\Users\User\Documents\GitHub\todoapp2\backend\src\main\java\com\todoapp\TodoAppBackendApplication.java
+C:\Users\User\Documents\GitHub\todoapp2\backend\src\main\java\com\todoapp\config\SecurityHeadersConfig.java
 C:\Users\User\Documents\GitHub\todoapp2\backend\src\main\java\com\todoapp\config\JwtAuthenticationFilter.java
 C:\Users\User\Documents\GitHub\todoapp2\backend\src\main\java\com\todoapp\service\CustomUserDetailsService.java
 C:\Users\User\Documents\GitHub\todoapp2\backend\src\main\java\com\todoapp\dto\AuthResponse.java
 C:\Users\User\Documents\GitHub\todoapp2\backend\src\main\java\com\todoapp\repository\UserRepository.java
+C:\Users\User\Documents\GitHub\todoapp2\backend\src\main\java\com\todoapp\util\SecurityValidator.java
 C:\Users\User\Documents\GitHub\todoapp2\backend\src\main\java\com\todoapp\service\strategy\DeadlineTodoStrategy.java
 C:\Users\User\Documents\GitHub\todoapp2\backend\src\main\java\com\todoapp\controller\TodoCollectionController.java
 C:\Users\User\Documents\GitHub\todoapp2\backend\src\main\java\com\todoapp\service\AuthService.java

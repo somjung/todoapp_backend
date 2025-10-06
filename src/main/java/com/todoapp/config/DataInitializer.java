@@ -19,20 +19,16 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Create default user if it doesn't exist
-        if (!userRepository.existsByUsername("admin")) { 
+        if (!userRepository.existsByEmail("admin@example.com")) {
             User defaultUser = new User();
-            defaultUser.setUsername("admin"); 
             defaultUser.setName("Admin User");
             defaultUser.setEmail("admin@example.com");
             defaultUser.setPassword(passwordEncoder.encode("password"));
-            
             userRepository.save(defaultUser);
             
-            System.out.println("=========================================");
-            System.out.println(">>>> Default admin user created <<<<");
-            System.out.println("Username: admin");
+            System.out.println("Default user created:");
+            System.out.println("Email: admin@example.com");
             System.out.println("Password: password");
-            System.out.println("=========================================");
         }
     }
 }
