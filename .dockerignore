@@ -1,0 +1,8 @@
+# Ignore directories/files created during development and built artifacts
+target/
+.mvn/
+.idea/
+.vscode/
+.git
+logs/
+*.log
