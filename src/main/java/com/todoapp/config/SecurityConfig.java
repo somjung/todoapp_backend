@@ -90,7 +90,8 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:3000",  // Development frontend
             "http://127.0.0.1:3000",  // Alternative localhost
-            "https://todoappfrontend-gvl161xgi-aseks-projects.vercel.app"
+            "https://todoappfrontend-gvl161xgi-aseks-projects.vercel.app",
+            "https://todoappfrontend-xi.vercel.app/"
         ));
         
         // Restrict HTTP methods to only what's needed
